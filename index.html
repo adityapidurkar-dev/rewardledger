@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f7f4">
+  <meta name="description" content="A simple reward budget calculator for vouchers, courses, licenses, and more.">
+  <title>RewardLedger — Reward Cost Calculator</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="./"><span class="brand-mark">R</span><span>RewardLedger</span></a>
+      <span class="local-badge"><span class="status-dot"></span> Saved in this browser</span>
+    </header>
+    <main>
+      <section class="intro">
+        <div><p class="eyebrow">BUDGET WORKSPACE</p><h1>Plan your rewards.<br><span>Know your total.</span></h1><p class="intro-copy">Keep vouchers, courses, software licenses, and other rewards in one clear list.</p></div>
+        <div class="currency-control"><label for="currency">Display currency</label><select id="currency">
+          <option value="INR">INR · Indian Rupee</option><option value="USD">USD · US Dollar</option><option value="EUR">EUR · Euro</option><option value="GBP">GBP · British Pound</option><option value="AED">AED · UAE Dirham</option><option value="CAD">CAD · Canadian Dollar</option><option value="AUD">AUD · Australian Dollar</option><option value="SGD">SGD · Singapore Dollar</option><option value="JPY">JPY · Japanese Yen</option><option value="CHF">CHF · Swiss Franc</option>
+        </select><p class="field-hint">Display only — prices are not converted.</p></div>
+      </section>
+      <section class="summary-grid" aria-label="Budget summary">
+        <article class="summary-card total-card"><div class="summary-label">Estimated total</div><div id="grand-total" class="summary-value" aria-live="polite">₹0.00</div><div class="summary-foot">Σ &nbsp; Sum of all reward items</div></article>
+        <article class="summary-card"><div class="summary-label">Reward entries</div><div id="entry-count" class="summary-value">0</div><div class="summary-foot">Different items in your list</div></article>
+        <article class="summary-card"><div class="summary-label">Total quantity</div><div id="total-quantity" class="summary-value">0</div><div class="summary-foot">Individual rewards planned</div></article>
+      </section>
+      <section class="workspace">
+        <div class="section-heading"><div><p class="eyebrow">YOUR LIST</p><h2>Reward items</h2></div><div class="heading-actions"><button class="button button-quiet" id="export-csv" type="button">Export CSV ↗</button><button class="button button-dark" id="add-item-top" type="button">＋ Add reward</button></div></div>
+        <form id="reward-form" class="entry-form">
+          <div class="form-title"><span class="form-title-icon">＋</span><div><h3 id="form-heading">Add a reward</h3><p>Enter the unit price and how many you need.</p></div></div>
+          <input id="editing-id" type="hidden">
+          <div class="form-grid">
+            <div class="form-field field-name"><label for="reward-name">Reward name <span class="required">*</span></label><input id="reward-name" name="name" type="text" placeholder="e.g. Amazon gift voucher" maxlength="120" required></div>
+            <div class="form-field"><label for="reward-type">Category</label><select id="reward-type" name="type"><option>Voucher</option><option>Course</option><option>License</option><option>Subscription</option><option>Merchandise</option><option>Other</option></select></div>
+            <div class="form-field"><label for="unit-cost">Cost per item <span class="required">*</span></label><div class="price-input"><span id="currency-symbol">₹</span><input id="unit-cost" name="cost" type="number" min="0" max="999999999999" step="0.01" placeholder="0.00" required></div></div>
+            <div class="form-field"><label for="quantity">Quantity <span class="required">*</span></label><input id="quantity" name="quantity" type="number" min="1" max="1000000" step="1" value="1" required></div>
+          </div>
+          <div class="form-footer"><p class="form-note">Line total is calculated automatically.</p><div class="form-actions"><button id="cancel-edit" class="button button-quiet hidden" type="button">Cancel</button><button id="save-item" class="button button-dark" type="submit">Add to list →</button></div></div>
+        </form>
+        <div class="table-wrap"><table><thead><tr><th class="item-col">ITEM</th><th>UNIT COST</th><th>QTY</th><th class="line-total-col">LINE TOTAL</th><th><span class="sr-only">Actions</span></th></tr></thead><tbody id="reward-rows"></tbody></table>
+          <div id="empty-state" class="empty-state"><div class="empty-illustration"><span>＋</span><span>₹</span><span>＝</span></div><h3>Your reward list starts here</h3><p>Add your first voucher, course, or license to see your budget take shape.</p><button class="button button-dark" id="empty-add" type="button">Add your first reward</button></div>
+        </div>
+        <div class="table-bottom"><span id="list-caption">No items added yet</span><div class="bottom-total"><span>Grand total</span><strong id="bottom-total">₹0.00</strong></div></div>
+      </section>
+      <section class="note-bar"><span class="note-icon">i</span><p><strong>About currency:</strong> the selected currency changes how totals are displayed. If your original prices are in different currencies, convert them before entering them here.</p></section>
+    </main>
+    <footer><span>RewardLedger</span><span>Simple planning. Clear totals.</span></footer>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="delete-dialog" class="confirm-dialog"><form method="dialog"><p class="eyebrow">REMOVE ITEM</p><h3>Delete this reward?</h3><p>This item will be removed from your list.</p><div class="dialog-actions"><button class="button button-quiet" value="cancel">Keep item</button><button class="button button-danger" id="confirm-delete" value="delete">Delete reward</button></div></form></dialog>
+</body>
+</html>
